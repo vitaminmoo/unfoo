@@ -1,8 +1,7 @@
 #!/bin/bash
 
 #
-# unfoo version 1.0.6
-# Copyright 2002, 2005, 2006 Graham Forest <vitaminmoo@wza.us>
+# Copyright 2002, 2005, 2006, 2009 Graham Forest <vitaminmoo@wza.us>
 # This script is released under the BSD license
 # If you make any improvements, or even changes,
 # I'd appreciate it if you'd send 'em to me
@@ -20,8 +19,6 @@
 
 #
 # Bugs, TODO:
-#
-#  o Added beep upon success. Take it out if you don't like it. - Raphael
 #
 #  o .pkg support is premature! It only works if the .pkg
 #    is bzip'd, not with gzip'd .pkg's such as Slackware has. - Raphael
