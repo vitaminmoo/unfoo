@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #
-# unfoo version 1.0.4
-# Copyright 2002 Graham Forest <vladimir AT rio.com.NOSPAM>
+# unfoo version 1.0.5
+# Copyright 2002, 2005 Graham Forest <vitaminmoo@wza.us>
 # This script is released under the BSD license
 # If you make any improvements, or even changes, 
 # I'd appreciate it if you'd send 'em to me
 # To get the newest version of this script, please
-# visit http://www.pocketninja.com/code
+# visit http://obsoleet.org/code
 #
 #####################################################################
 
@@ -54,7 +54,7 @@ if [ ! "$1" ]; then # Seems we've got Altzheimer, hmm?
 	exit 1
 fi
 
-for i in $@; do
+for i in "$@"; do
 
 	ITIS=`basename "$i"` # Name of file (for output)
 
@@ -65,7 +65,6 @@ for i in $@; do
 			echo -n "$IAM: Unpacking tarball $ITIS..."
 			tar xf "$i"
 			check_success
-			#exit "$?"
 			;;
 			
 		# tar'd and gzip'd or compress'd	
@@ -73,7 +72,6 @@ for i in $@; do
 			echo -n "$IAM: Decompressing and unpacking gzip'd tarball $ITIS..."
 			gzip -dc "$i" | tar xf -
 			check_success
-			#exit "$?"
 			;;
 			
 		# tar'd and bzip2'd	
@@ -81,7 +79,6 @@ for i in $@; do
 	 		echo -n "$IAM: Decompressing and unpacking bzip'd tarball $ITIS..."
 	 		bzip2 -dc "$i" | tar xf -
 			check_success
-			#exit "$?"
 			;;
 			
 		# gzip'd or compress'd	
@@ -89,7 +86,6 @@ for i in $@; do
 			echo -n "$IAM: Decompressing gzip archive $ITIS..."
 			gzip -dc "$i" > `basename "$i" .gz`
 			check_success
-			#exit "$?"
 			;;
 			
 		# bzip2'd	
@@ -97,7 +93,6 @@ for i in $@; do
 			echo -n "Decompressing bzip2 archive $ITIS...";
 			bzip2 -dc "$i" > `basename "$i" .bz2`
 			check_success
-			#exit "$?"
 			;;
 			
 		# Packed with (Win)ACE	
@@ -105,7 +100,6 @@ for i in $@; do
 			echo -n "$IAM: Unpacking WinACE archive $ITIS..."
 			unace x "$i"
 			check_success
-			#exit "$?"
 			;;
 			
 		# Packed with (Win)RAR
@@ -113,7 +107,6 @@ for i in $@; do
 			echo -n "$IAM: Unpacking WinRAR archive $ITIS..."
 			unrar x "$i"
 			check_success	
-			#exit "$?"
 			;;
 			
 		# Classically zipped	
@@ -121,13 +114,11 @@ for i in $@; do
 			echo -n "$IAM: Unpacking pkzip archive $ITIS..."
 			unzip "$i"
 			check_success
-			#exit "$?"
 			;;
 			
 		# Ooops... people have wierd things, eh?	
 		*)
 			echo "$IAM: $ITIS - Filetype unknown"
-			#exit 1
 			;;
 			
 	esac
