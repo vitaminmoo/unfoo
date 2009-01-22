@@ -20,17 +20,9 @@
 #
 # Bugs, TODO:
 #
-#  o .pkg support is premature! It only works if the .pkg
-#    is bzip'd, not with gzip'd .pkg's such as Slackware has. - Raphael
-#
 #  o Needs to pass options (like -v) to called programs
 #
-#  o STDIN support
-#
 #  o Need to add a which statement with decompressor missing error
-#
-#  o I added some support without actually having
-#    it, so some more testing is needed
 #
 #####################################################################
 
