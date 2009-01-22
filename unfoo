@@ -4,7 +4,7 @@
 # unfoo version 1.0.6
 # Copyright 2002, 2005, 2006 Graham Forest <vitaminmoo@wza.us>
 # This script is released under the BSD license
-# If you make any improvements, or even changes, 
+# If you make any improvements, or even changes,
 # I'd appreciate it if you'd send 'em to me
 # To get the newest version of this script, please
 # visit http://obsoleet.org/code
@@ -13,7 +13,8 @@
 
 #
 # Dependencies:
-# tar, gzip, bzip2, unace, unrar, unzip, 7z, but only if you use them
+# tar, gzip, bzip2, unace, unrar, unzip, 7z, lzma
+# but only if you use them
 #
 #####################################################################
 
@@ -38,7 +39,7 @@
 
 check_success() # Could've written this by myself. Took it
                 # from jsmaby's minimal system's initscript
-   	        # instead. Thanks jsmaby. - Raphael
+                # instead. Thanks jsmaby. - Raphael
 {
   if [ "$?" == "0" ]; then
     echo -e " done\007" # Makes a beep when successful. - Raphael
@@ -50,81 +51,95 @@ check_success() # Could've written this by myself. Took it
 IAM=`basename "$0"` # Our name
 
 if [ ! "$1" ]; then # Seems we've got Altzheimer, hmm?
-	echo "$IAM: You must specify at least one file"
-	exit 1
+    echo "$IAM: You must specify at least one file"
+    exit 1
 fi
 
 for i in "$@"; do
 
-	ITIS=`basename "$i"` # Name of file (for output)
+    ITIS=`basename "$i"` # Name of file (for output)
 
-	case "$i" in # Evaluating the filetype...
-	
-		# No compression at all
-		*.tar)
-			echo -n "$IAM: Unpacking tarball $ITIS..."
-			tar xf "$i"
-			check_success
-			;;
-			
-		# tar'd and gzip'd or compress'd	
-		*.tar.gz|*.tgz|.tar.Z|.tar.z)
-			echo -n "$IAM: Decompressing and unpacking gzip'd tarball $ITIS..."
-			gzip -dc "$i" | tar xf -
-			check_success
-			;;
-			
-		# tar'd and bzip2'd	
-		*.tar.bz2|*.tbz2|*.pkg)
-	 		echo -n "$IAM: Decompressing and unpacking bzip'd tarball $ITIS..."
-	 		bzip2 -dc "$i" | tar xf -
-			check_success
-			;;
-			
-		# gzip'd or compress'd	
-		*.gz|*.Z|*.z)
-			echo -n "$IAM: Decompressing gzip archive $ITIS..."
-			gzip -dc "$i" > `basename "$i" .gz`
-			check_success
-			;;
-			
-		# bzip2'd	
-		*.bz2)
-			echo -n "Decompressing bzip2 archive $ITIS...";
-			bzip2 -dc "$i" > `basename "$i" .bz2`
-			check_success
-			;;
-			
-		# Packed with (Win)ACE	
-		*.ace)
-			echo -n "$IAM: Unpacking WinACE archive $ITIS..."
-			unace x "$i"
-			check_success
-			;;
-			
-		# Packed with (Win)RAR
-		*.rar)
-			echo -n "$IAM: Unpacking WinRAR archive $ITIS..."
-			unrar x "$i"
-			check_success	
-			;;
-			
-		# Classically zipped	
-		*.zip)
-			echo -n "$IAM: Unpacking pkzip archive $ITIS..."
-			unzip "$i"
-			check_success
-			;;
-		# Packed with 7zip, thanks Komoto
-		*.7z)
-			echo -n"$IAM: Unpacking 7zip archive $ITIS..."
-			7z x "$i"
-			check_success
-			;;
-		# Ooops... people have wierd things, eh?	
-		*)
-			echo "$IAM: $ITIS - Filetype unknown"
-			;;
-			
-	esac
+    case "$i" in # Evaluating the filetype...
+
+        # No compression at all
+        *.tar)
+            echo -n "$IAM: Unpacking tarball $ITIS..."
+            tar xf "$i"
+            check_success
+            ;;
+
+        # tar'd and gzip'd or compress'd
+        *.tar.gz|*.tgz|.tar.Z|.tar.z)
+            echo -n "$IAM: Decompressing and unpacking gzip'd tarball $ITIS..."
+            gzip -dc "$i" | tar xf -
+            check_success
+            ;;
+
+        # tar'd and bzip2'd
+        *.tar.bz2|*.tbz2|*.pkg)
+            echo -n "$IAM: Decompressing and unpacking bzip'd tarball $ITIS..."
+            bzip2 -dc "$i" | tar xf -
+            check_success
+            ;;
+
+        # tar'd and lzma'd, thanks  Michel Lang
+        *.tar.lzma|*.tlz)
+            echo -n "$IAM: Decompressing and unpacking lzma'd tarball $ITIS..."
+            lzma -dc "$i" | tar xf -
+            check_success
+            ;;
+
+        # gzip'd or compress'd
+        *.gz|*.Z|*.z)
+            echo -n "$IAM: Decompressing gzip archive $ITIS..."
+            gzip -dc "$i" > `basename "$i" .gz`
+            check_success
+            ;;
+
+        # bzip2'd
+        *.bz2)
+            echo -n "Decompressing bzip2 archive $ITIS...";
+            bzip2 -dc "$i" > `basename "$i" .bz2`
+            check_success
+            ;;
+
+        # lzma'd, thanks Michel Lang
+        *.lzma)
+            echo -n "Decompressing lzma archive $ITIS...";
+            lzma -dc "$i" > `basename "$i" .lzma`
+            check_success
+            ;;
+
+        # Packed with (Win)ACE
+        *.ace)
+            echo -n "$IAM: Unpacking WinACE archive $ITIS..."
+            unace x "$i"
+            check_success
+            ;;
+
+        # Packed with (Win)RAR
+        *.rar)
+            echo -n "$IAM: Unpacking WinRAR archive $ITIS..."
+            unrar x "$i"
+            check_success
+            ;;
+
+        # Classically zipped
+        *.zip)
+            echo -n "$IAM: Unpacking pkzip archive $ITIS..."
+            unzip "$i"
+            check_success
+            ;;
+        # Packed with 7zip, thanks Komoto
+        *.7z)
+            echo -n"$IAM: Unpacking 7zip archive $ITIS..."
+            7z x "$i"
+            check_success
+            ;;
+        # Ooops... people have wierd things, eh?
+        *)
+            echo "$IAM: $ITIS - Filetype unknown"
+            ;;
+
+    esac
 done
