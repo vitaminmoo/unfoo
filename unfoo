@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #
-# unfoo version 1.0.5
-# Copyright 2002, 2005 Graham Forest <vitaminmoo@wza.us>
+# unfoo version 1.0.6
+# Copyright 2002, 2005, 2006 Graham Forest <vitaminmoo@wza.us>
 # This script is released under the BSD license
 # If you make any improvements, or even changes, 
 # I'd appreciate it if you'd send 'em to me
@@ -13,7 +13,7 @@
 
 #
 # Dependencies:
-# tar, gzip, bzip2, unace, unrar, unzip, but only if you use them
+# tar, gzip, bzip2, unace, unrar, unzip, 7z, but only if you use them
 #
 #####################################################################
 
@@ -115,7 +115,12 @@ for i in "$@"; do
 			unzip "$i"
 			check_success
 			;;
-			
+		# Packed with 7zip, thanks Komoto
+		*.7z)
+			echo -n"$IAM: Unpacking 7zip archive $ITIS..."
+			7z x "$i"
+			check_success
+			;;
 		# Ooops... people have wierd things, eh?	
 		*)
 			echo "$IAM: $ITIS - Filetype unknown"
