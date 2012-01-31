@@ -99,6 +99,13 @@ for i in "$@"; do
             check_success
             ;;
 
+        # tar'd and xz'd
+        *.tar.xz)
+            echo -n "$IAM: Decompressing and unpacking xz'd tarball $ITIS..."
+            xz -dc "$i" | tar xf -
+            check_success
+            ;;
+
         # gzip'd or compress'd
         *.gz|*.Z|*.z)
             echo -n "$IAM: Decompressing gzip archive $ITIS..."
@@ -140,12 +147,21 @@ for i in "$@"; do
             unzip "$i"
             check_success
             ;;
+
         # Packed with 7zip, thanks Komoto
         *.7z)
             echo -n"$IAM: Unpacking 7zip archive $ITIS..."
             7z x "$i"
             check_success
             ;;
+
+        # Packed with xz 
+        *.xz)
+            echo -n "$IAM: Decompressing gzip archive $ITIS..."
+            xz -dc "$i" > `basename "$i" .xz`
+            check_success
+            ;;
+
         # Ooops... people have wierd things, eh?
         *)
             echo "$IAM: $ITIS - Filetype unknown"
