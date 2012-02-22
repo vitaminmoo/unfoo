@@ -60,10 +60,12 @@ need_subdir() {
 }
 
 check_success() {
-  if [ "$?" == "0" ]; then
+  status=$?
+  if [ "$status" == "0" ]; then
     echo -e " done\007" # Makes a beep when successful. - Raphael
   else
     echo -e " failed"
+    exit $status
   fi
 }
 
