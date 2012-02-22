@@ -1,0 +1,65 @@
+# treat unset variables as an error when performing parameter expansion
+set -u
+
+# set shwordsplit for zsh
+[ -n "${ZSH_VERSION:-}" ] && setopt shwordsplit
+
+#
+# custom
+#
+PROGRAM=$(readlink -f ../unfoo)
+FIXTURES=$(readlink -f fixtures/)
+OUTPUT=$(readlink -f output/)
+
+assertOutputSame() {
+  comp=$1
+  expected=$2
+
+  diff --ignore-all-space --ignore-blank-lines --brief $comp $expected
+  assertTrue 'Output doesnt match' $?
+}
+
+
+# path to shUnit2 library. can be overridden by setting SHUNIT_INC
+TH_SHUNIT=${SHUNIT_INC:-./lib/shunit2}
+
+# configure debugging. set the DEBUG environment variable to any
+# non-empty value to enable debug output, or TRACE to enable trace
+# output.
+TRACE=${TRACE:+'th_trace '}
+[ -n "${TRACE}" ] && DEBUG=1
+[ -z "${TRACE}" ] && TRACE=':'
+
+DEBUG=${DEBUG:+'th_debug '}
+[ -z "${DEBUG}" ] && DEBUG=':'
+
+#
+# constants
+#
+MY_NAME=`basename $0`
+
+#
+# variables
+#
+
+#
+# functions
+#
+
+# message functions
+th_trace() { echo "${MY_NAME}:TRACE $@" >&2; }
+th_debug() { echo "${MY_NAME}:DEBUG $@" >&2; }
+th_info() { echo "${MY_NAME}:INFO $@" >&2; }
+th_warn() { echo "${MY_NAME}:WARN $@" >&2; }
+th_error() { echo "${MY_NAME}:ERROR $@" >&2; }
+th_fatal() { echo "${MY_NAME}:FATAL $@" >&2; }
+
+# output subtest name
+th_subtest() { echo " $@" >&2; }
+
+#
+# main
+#
+
+${TRACE} 'trace output enabled'
+${DEBUG} 'debug output enabled'
