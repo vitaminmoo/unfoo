@@ -1,0 +1,85 @@
+#! /bin/sh
+# vim:et:ft=sh:sts=2:sw=2
+#
+# Test runner for shunit2 tests. Based off the runner found in the shunit2
+# source.
+
+MY_NAME=`basename $0`
+MY_PATH=`dirname $0`
+
+PREFIX='test_'
+SHELLS='/bin/sh /bin/bash /bin/dash /bin/ksh /bin/pdksh /bin/zsh'
+TESTS=''
+for test in ${PREFIX}[a-z]*.sh; do
+  TESTS="${TESTS} ${test}"
+done
+
+# load common unit test functions
+. ./test_helpers
+
+usage()
+{
+  echo "usage: ${MY_NAME} [-e key=val ...] [-s shell(s)] [-t test(s)]"
+}
+
+env=''
+
+# process command line flags
+while getopts 'hs:t:' opt; do
+  case ${opt} in
+    h) usage; exit 0 ;;  # output help
+    s) shells=${OPTARG} ;;  # list of shells to run
+    t) tests=${OPTARG} ;;  # list of tests to run
+    *) usage; exit 1 ;;
+  esac
+done
+shift `expr ${OPTIND} - 1`
+
+# fill shells and/or tests
+shells=${shells:-${SHELLS}}
+tests=${tests:-${TESTS}}
+
+# error checking
+if [ -z "${tests}" ]; then
+  th_error 'no tests found to run; exiting'
+  exit 1
+fi
+
+mkdir results
+for shell in ${shells}; do
+  echo
+
+  # check for existance of shell
+  if [ ! -x ${shell} ]; then
+    th_warn "unable to run tests with the ${shell} shell"
+    continue
+  fi
+
+  echo "################### Running the test suite with ${shell} #####################"
+
+  SHUNIT_SHELL=${shell}  # pass shell onto tests
+
+  # execute the tests
+  for suite in ${tests}; do
+    suiteName=`expr "${suite}" : "${PREFIX}\(.*\).sh"`
+    echo "--- Executing the '${suiteName}' test suite ---"
+    ( exec ${shell} ./${suite} 2>&1 | tee results/$(basename ${shell}).${suite}.txt; )
+    echo
+  done
+done
+
+echo "################################### RESULTS ###################################"
+for shell in ${shells}; do
+  count=0
+  skipped=0
+  failed=0
+  for file in results/$(basename ${shell})*; do
+    addend=$(grep '^Ran' $file 2>/dev/null | cut -d' ' -f2)
+    count=$((count+${addend:-0}))
+    addend=$(grep -o 'skipped=[0-9]*' $file 2>/dev/null | cut -d= -f2)
+    skipped=$((skipped+${addend:-0}))
+    addend=$(grep -o 'failures=[0-9]*' $file 2>/dev/null | cut -d= -f2)
+    failed=$((failed+${addend:-0}))
+  done
+  echo "${shell}:\t${count} tests, ${failed} failures, ${skipped} skipped"
+done
