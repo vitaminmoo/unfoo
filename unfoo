@@ -173,9 +173,10 @@ for i in "$@"; do
             ;;
 
         # gzip'd or compress'd
-        *.gz|*.Z|*.z)
+        *.gz|*.Z|*.z|*.gzip)
             echo -n "$IAM: Decompressing gzip archive $ITIS..."
-            gzip -dc "$i" > `basename "$i" .gz`
+            filename=$(basename $i | sed -r 's/(.gz|.gzip)$//g')
+            gzip -dc "$i" > $filename
             check_success
             ;;
 
