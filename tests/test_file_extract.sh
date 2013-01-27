@@ -5,7 +5,7 @@
 
 
 test_file_extract() {
-    for name in gz bz2 lzma xz
+    for name in gz bz2 lzma xz gzip
     do
         echo "Testing ${name}"
         extract_archive $name
@@ -14,6 +14,7 @@ test_file_extract() {
 extract_archive() {
     ext=$1
     cd $SHUNIT_TMPDIR
+
     $PROGRAM $FIXTURES/ipsum.txt.${ext} > /dev/null
     result_val=$?
 
