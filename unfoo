@@ -101,7 +101,7 @@ for i in "$@"; do
             ;;
 
         # tar'd and gzip'd or compress'd
-        *.tar.gz|*.tgz|*.tar.Z|*.tar.z)
+        *.tar.gz|*.tgz|*.tar.Z|*.tar.z|*.tZ|*.tz)
             echo -n "$IAM: Decompressing and unpacking gzip'd tarball $ITIS..."
             if [ $(tar ft "$i" | need_subdir) == 1 ]; then
                 dirname=$(basename $i | sed -r 's/(.tar.gz|.tgz|.tar.Z|.tar.z)$//g')
